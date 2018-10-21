@@ -17,14 +17,23 @@ require 'rails_helper'
 # is no simpler way to get a handle on the object needed for the example.
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
+#
+# Also compared to earlier versions of this generator, there are no longer any
+# expectations of assigns and templates rendered. These features have been
+# removed from Rails core in Rails 5, but can be added back in via the
+# `rails-controller-testing` gem.
 
-RSpec.describe PostsController, :type => :controller do
+RSpec.describe PostsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
   # Post. As you add validations to Post, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    {title: "My String", description: "My desc"}
+    skip("Add a hash of attributes valid for your model")
+  }
+
+  let(:invalid_attributes) {
+    skip("Add a hash of attributes invalid for your model")
   }
 
   # This should return the minimal set of values that should be in the session
@@ -32,49 +41,43 @@ RSpec.describe PostsController, :type => :controller do
   # PostsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    it "assigns all posts as @posts" do
-      post = Post.create! valid_attributes
+  describe "GET #index" do
+    it "returns a success response" do
+      Post.create! valid_attributes
       get :index, {}, valid_session
-      expect(assigns(:posts)).to eq([post])
+      expect(response).to be_successful
     end
   end
 
-  describe "GET show" do
-    it "assigns the requested post as @post" do
+  describe "GET #show" do
+    it "returns a success response" do
       post = Post.create! valid_attributes
       get :show, {:id => post.to_param}, valid_session
-      expect(assigns(:post)).to eq(post)
+      expect(response).to be_successful
     end
   end
 
-  describe "GET new" do
-    it "assigns a new post as @post" do
+  describe "GET #new" do
+    it "returns a success response" do
       get :new, {}, valid_session
-      expect(assigns(:post)).to be_a_new(Post)
+      expect(response).to be_successful
     end
   end
 
-  describe "GET edit" do
-    it "assigns the requested post as @post" do
+  describe "GET #edit" do
+    it "returns a success response" do
       post = Post.create! valid_attributes
       get :edit, {:id => post.to_param}, valid_session
-      expect(assigns(:post)).to eq(post)
+      expect(response).to be_successful
     end
   end
 
-  describe "POST create" do
-    describe "with valid params" do
+  describe "POST #create" do
+    context "with valid params" do
       it "creates a new Post" do
         expect {
           post :create, {:post => valid_attributes}, valid_session
         }.to change(Post, :count).by(1)
-      end
-
-      it "assigns a newly created post as @post" do
-        post :create, {:post => valid_attributes}, valid_session
-        expect(assigns(:post)).to be_a(Post)
-        expect(assigns(:post)).to be_persisted
       end
 
       it "redirects to the created post" do
@@ -82,25 +85,26 @@ RSpec.describe PostsController, :type => :controller do
         expect(response).to redirect_to(Post.last)
       end
     end
+
+    context "with invalid params" do
+      it "returns a success response (i.e. to display the 'new' template)" do
+        post :create, {:post => invalid_attributes}, valid_session
+        expect(response).to be_successful
+      end
+    end
   end
 
-  describe "PUT update" do
-    describe "with valid params" do
+  describe "PUT #update" do
+    context "with valid params" do
       let(:new_attributes) {
-        {title: "New String"}
+        skip("Add a hash of attributes valid for your model")
       }
 
       it "updates the requested post" do
         post = Post.create! valid_attributes
         put :update, {:id => post.to_param, :post => new_attributes}, valid_session
         post.reload
-        expect(post.title).to eq("New String")
-      end
-
-      it "assigns the requested post as @post" do
-        post = Post.create! valid_attributes
-        put :update, {:id => post.to_param, :post => valid_attributes}, valid_session
-        expect(assigns(:post)).to eq(post)
+        skip("Add assertions for updated state")
       end
 
       it "redirects to the post" do
@@ -109,9 +113,17 @@ RSpec.describe PostsController, :type => :controller do
         expect(response).to redirect_to(post)
       end
     end
+
+    context "with invalid params" do
+      it "returns a success response (i.e. to display the 'edit' template)" do
+        post = Post.create! valid_attributes
+        put :update, {:id => post.to_param, :post => invalid_attributes}, valid_session
+        expect(response).to be_successful
+      end
+    end
   end
 
-  describe "DELETE destroy" do
+  describe "DELETE #destroy" do
     it "destroys the requested post" do
       post = Post.create! valid_attributes
       expect {
